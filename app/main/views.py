@@ -3,5 +3,7 @@ from . import main
 
 
 @main.route('/')
+@main.route('/Home')
 def index():
-    return render_template('index.html')
+    title = "Home - Welcome to Let's Blog"
+    return render_template('index.html', title=title)
