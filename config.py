@@ -5,14 +5,13 @@ class Config:
     """
     General configuration class
     """
-    pass
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root:pass@localhost/blog'
 
 
 class ProdConfig(Config):
     """
     Production configuration class
     """
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root:root@localhost/blog'
 
 class DevConfig(Config):
     """
