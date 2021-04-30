@@ -1,3 +1,6 @@
+import os
+
+
 class Config:
     """
     General configuration class
@@ -9,7 +12,7 @@ class ProdConfig(Config):
     """
     Production configuration class
     """
-    pass
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root:root@localhost/blog'
 
 class DevConfig(Config):
     """
