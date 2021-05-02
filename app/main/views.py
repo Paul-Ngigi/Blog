@@ -3,19 +3,22 @@ from . import main
 from flask_login import login_required
 from .forms import UpdateProfile
 from .. import db, photos
-from ..models import User
+from ..models import User, Posts, Comments
+from ..requests import get_quotes
 
 
 @main.route('/')
 @main.route('/Home')
 def index():
+    quote = get_quotes()
     title = "Home - Welcome to Bloggers."
-    return render_template('index.html', title=title)
+    return render_template('index.html', title=title, quote=quote)
 
 
 @main.route('/blogs')
 def blogs():
-    return render_template('blogs.html')
+    posts = Posts.query.all()
+    return render_template('blogs.html', posts = posts)
 
 @main.route('/add_blog', methods=["GET","POST"])
 @login_required
@@ -62,3 +65,23 @@ def update_pic(uname):
         user.profile_pic_path = path
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
+
+
+@main.route('/comments/<int:posts_id>', methods=['GET','POST'])
+@login_required
+def new_comment(posts_id):
+    form = CommentsForm()
+    posts = Posts.query.get(posts_id)
+    comment = Comments.query.filter_by(post_id=posts_id).all()
+    if form.validate_on_submit():
+        comments = form.comment.data
+        
+        post_id = posts_id
+        user_id = current_user._get_current_object().id
+        new_comment= Comments(comments=comments,posts_id=post_id, user_id=user_id)
+        new_comment.save_comment()      
+       
+        return redirect(url_for('main.new_comment', posts_id=post_id))
+    
+    return render_template('comments.html', form=form, comment=comment, posts_id=post_id,posts=posts)
+
