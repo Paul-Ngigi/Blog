@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_mail import Mail
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 
 bootstrap = Bootstrap()
@@ -29,6 +31,14 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    
+    # Will add the views and forms
+    adm = Admin(app,name='Blog-Admin')
+    from app.models import Posts,User,Comments,Controller
+    adm.add_view(Controller(User, db.session))
+    adm.add_view(Controller(Posts, db.session))
+    adm.add_view(Controller(Comments, db.session))
+
     
     # Configure uploadset
     configure_uploads(app, photos)
