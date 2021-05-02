@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request
 from . import main
-from flask_login import login_required
-from .forms import UpdateProfile
+from flask_login import login_required, current_user
+from .forms import UpdateProfile, BlogForm
 from .. import db, photos
 from ..models import User, Posts, Comments
 from ..requests import get_quotes
@@ -23,7 +23,18 @@ def blogs():
 @main.route('/add_blog', methods=["GET","POST"])
 @login_required
 def add_blog():
-    return render_template(add_blog.html)
+    form = BlogForm()
+    
+    if form.validate_on_submit():
+        title = form.title.data
+        post = form.post.data
+        user_id = current_user
+        new_blog_object = Posts(id=user_id, title=title, post=post)
+        new_blog_object.save_post()
+        return redirect(url_for('main.blogs'))
+    
+    title = "Add Blog - Welcome to Bloggers."
+    return render_template('add_blog.html', title=title, blog_form=form)
 
     
 @main.route('/user/<uname>')
