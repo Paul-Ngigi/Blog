@@ -1,14 +1,15 @@
-from flask import render_template
+from flask import render_template, redirect, url_for, request
 from . import main
 from flask_login import login_required
 from .forms import UpdateProfile
 from .. import db, photos
+from ..models import User
 
 
 @main.route('/')
 @main.route('/Home')
 def index():
-    title = "Home - Welcome to Let's Blog"
+    title = "Home - Welcome to Bloggers."
     return render_template('index.html', title=title)
 
 
