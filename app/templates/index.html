@@ -8,23 +8,46 @@
             <img src="../static/images/nYgy58eb9aw (2).jpg" alt="" style="background: cover;">
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <blockquote class="blockquote text-center">
+                <p class="mb-0">{{quote.quote}}</p>
+                <footer class="blockquote-footer"><cite>{{quote.author}}</cite></footer>
+              </blockquote>
+        </div>
+    </div>
+    
     <div class="row mt-5">
         <hr>
         <div class="col-md-12">
-            <h2 class="text-info fw-bolder">
+            <h1 class="text-info fw-bolder">
                 <i>About Bloggers</i>
-            </h2>
+            </h1>
         </div>
         <div class="col-md-12">
-            <p>Bloggers is a site where users are able to post and view other people's blogs.The site is a community
+            <h3>Bloggers is a site where users are able to post and view other people's blogs.The site is a community
                 that connects all people together without any form of discrimination. Have a chance to see all kinds of
                 news around.
-            </p>
+            </h3>
             {% if current_user.is_authenticated %}
-            <p>Let others know what you are thinking <a href="">Add Blog</a></p>
+            <h4>Let others know what you are thinking <a href="">Add Blog</a></p>
             {% else %}
-            <p>Join us today <a href="{{url_for('auth.login')}}">Sign In</a> and have a chance to post your blogs on our site</p>
+            <h4>Join us today <a href="{{url_for('auth.login')}}">Sign In</a> and have a chance to post your blogs on our site</p>
             {% endif %}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <footer>
+                <p style="text-align: center"> Copyright &copy;
+                    <script>document.write(new Date().getFullYear())</script> Portfolio All Rights Reserved
+                </p>
+            </footer>
         </div>
     </div>
 </div>
