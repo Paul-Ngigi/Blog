@@ -1,28 +1,29 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin   
+from flask_login import UserMixin, current_user 
 from . import login_manager
-from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from datetime import datetime
+from flask import session, abort
 
-admin = Admin()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+
 class User(UserMixin,db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(255), index=True)
-    email = db.Column(db.String(255), unique=True, index=True)
     bio = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True, index=True)
     profile_pic_path = db.Column(db.String())
     pass_secure = db.Column(db.String(255))
-    is_admin = db.Column(db.Boolean, default=False)
     comment = db.relationship('Comments', backref='user', lazy='dynamic')
-
+    post = db.relationship('Posts', backref='user', lazy='dynamic')
+ 
     
     
     @property
@@ -45,8 +46,9 @@ class User(UserMixin,db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.profile_pic}')"
+        return f"'{self.username}'"
 
+    
 
 class Posts(db.Model):
     '''
@@ -57,13 +59,13 @@ class Posts(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False)
-    slug = db.Column(db.String(200), unique=True, nullable=False)
+    title = db.Column(db.String(200))
+    author = db.Column(db.String(100))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    post = db.Column(db.Text())
     comments = db.relationship('Comments', backref='comment', lazy='dynamic')
     views = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
 
     
@@ -73,7 +75,7 @@ class Posts(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"Posts('{self.title}','{self.date_posted}')"
+        return f"Post '{self.post}', '{self.date_posted}'"
 
 class Comments(db.Model):
     __tablename__ = 'comments' 
@@ -102,15 +104,6 @@ class Comments(db.Model):
         return f'Comment{self.comments}'
 
 
-class Controller(ModelView):
-    def is_accessible(self):
-        if current_user.is_admin == True:
-            return current_user.is_authenticated
-        else:
-            abort(404)    
-    def not_auth(self):
-        return "you are not authorised"
-
 class Quote:
     """
     class to define Quote Objects
@@ -119,4 +112,3 @@ class Quote:
         self.quote = quote
         self.author = author
 
-admin.add_view(Controller(Posts, db.session))

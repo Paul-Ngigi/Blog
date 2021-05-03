@@ -35,5 +35,6 @@ class TestConfig(Config):
 
 config_option = {
     'production': ProdConfig,
-    'development': DevConfig
+    'development': DevConfig,
+    'test': TestConfig
 }

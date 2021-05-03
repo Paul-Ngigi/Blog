@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for,abort,request,flash
 from . import main
 from flask_login import login_required, current_user
 from .forms import UpdateProfile, BlogForm
@@ -28,8 +28,8 @@ def add_blog():
     if form.validate_on_submit():
         title = form.title.data
         post = form.post.data
-        user_id = current_user
-        new_blog_object = Posts(id=user_id, title=title, post=post)
+        user = current_user._get_current_object().id
+        new_blog_object = Posts(user_id=user, title=title, post=post)
         new_blog_object.save_post()
         return redirect(url_for('main.blogs'))
     

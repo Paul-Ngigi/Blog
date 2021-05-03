@@ -32,7 +32,7 @@
                 news around.
             </h3>
             {% if current_user.is_authenticated %}
-            <h4>Let others know what you are thinking <a href="">Add Blog</a></p>
+            <h4>Let others know what you are thinking <a href="{{url_for('main.add_blog')}}">Add Blog</a></p>
             {% else %}
             <h4>Join us today <a href="{{url_for('auth.login')}}">Sign In</a> and have a chance to post your blogs on our site</p>
             {% endif %}
