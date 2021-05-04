@@ -105,21 +105,21 @@ class Comments(db.Model):
     
     
 class Subscribe(db.Model):
-      __tablename__='subscribes'
+    __tablename__='subscribers'
 
-  id =db.Column(db.Integer,primary_key=True)
-  email=db.Column(db.String(255),unique=True)
+    id =db.Column(db.Integer,primary_key=True)
+    email=db.Column(db.String(255),unique=True)
 
-  def save_subscriber(self):
-    db.session.add(self)
-    db.session.commit()
+    def save_subscriber(self):
+        db.session.add(self)
+        db.session.commit()
 
-  def delete_subscriber(self):
-    db.session.delete(self)
-    db.session.commit()
+    def delete_subscriber(self):
+        db.session.delete(self)
+        db.session.commit()
 
-  def __repr__(self):
-    return f"Subscribe {self.email}"
+    def __repr__(self):
+        return f"Subscribe {self.email}"
 
 
 
