@@ -18,7 +18,8 @@ def index():
 @main.route('/blogs')
 def blogs():
     posts = Posts.query.all()
-    return render_template('blogs.html', posts = posts)
+    title = "Blogs - Welcome to Bloggers."
+    return render_template('blogs.html', posts = posts, title=title)
 
 @main.route('/add_blog', methods=["GET","POST"])
 @login_required
@@ -39,17 +40,20 @@ def add_blog():
     
 @main.route('/user/<uname>')
 def profile(uname):
+    title = "Profile - Welcome to Bloggers."
     user = User.query.filter_by(username = uname).first()
 
     if user is None:
         abort(404)
 
-    return render_template("profile/profile.html", user = user)
+    return render_template("profile/profile.html", user = user, title=title)
 
 
 @main.route('/user/<uname>/update',methods = ['GET','POST'])
 @login_required
 def update_profile(uname):
+    title = "Update Profile - Welcome to Bloggers."
+    
     user = User.query.filter_by(username = uname).first()
     if user is None:
         abort(404)
@@ -64,7 +68,7 @@ def update_profile(uname):
 
         return redirect(url_for('.profile',uname=user.username))
 
-    return render_template('profile/update.html',form =form)
+    return render_template('profile/update.html',form =form, title=title)
 
 @main.route('/user/<uname>/update/pic',methods= ['POST'])
 @login_required
@@ -81,6 +85,7 @@ def update_pic(uname):
 @main.route('/comments/<int:posts_id>', methods=['GET','POST'])
 @login_required
 def new_comment(posts_id):
+    title = "Comment - Welcome to Bloggers."
     form = CommentsForm()
     posts = Posts.query.get(posts_id)
     comment = Comments.query.filter_by(post_id=posts_id).all()
@@ -94,5 +99,5 @@ def new_comment(posts_id):
        
         return redirect(url_for('main.new_comment', posts_id=post_id))
     
-    return render_template('comments.html', form=form, comment=comment, posts_id=post_id,posts=posts)
+    return render_template('comments.html', form=form, comment=comment, posts_id=post_id,posts=posts, title=title)
 
